@@ -19,19 +19,19 @@ class BaseModel:
         if kwargs:
             for key, value in kwargs.items():
                 if key != '__class__':
-                    if key in ["created_at", "updated_at"]:
-                        value = datetime.strptime(value, self.TIME_FORMAT)
+                    continue
+                else:
                     setattr(self, key, value)
         else:
             self.id = str(uuid.uuid4())
             self.created_at = datetime.now()
             self.updated_at = datetime.now()
-            # models.storage.new(self)
+            models.storage.new(self)
 
     def __str__(self) -> str:
         """Return a string representation of the instance."""
-        class_name = self.__class__.__name__
-        return "[{}] ({}) {}".format(class_name, self.id, self.__dict__)
+        #class_name = self.__class__.__name__
+        return ("[{}] ({}) {}".format(self.__class__.__name__, self.id, self.__dict__)
 
     def save(self):
         """Update the updated_at attribute and save the instance."""
