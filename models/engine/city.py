@@ -1,15 +1,14 @@
 #!/usr/bin/python3
-
-"""City Module:
-Inherits from Superclass BaseModel
-"""
-
+"""The City class."""
 from models.base_model import BaseModel
 
 
 class City(BaseModel):
-    """City class that inherits from BaseModel
-    with Public class attributes
     """
-    state_id: str = ""
-    name: str = ""
+    Attributes:
+        state_id (str): The state id.
+        name (str): The name of the city.
+    """
+
+    state_id = ""
+    name = ""
