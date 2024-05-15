@@ -1,12 +1,12 @@
 #!/usr/bin/python3
-
-"""State Module:
-Inherits from Superclass BaseModel
-"""
-
+"""The State class."""
 from models.base_model import BaseModel
 
 
 class State(BaseModel):
-    """State class that inherits from BaseModel."""
-    name: str = ""
+    """
+    Attributes:
+        name (str): The name of the state.
+    """
+
+    name = ""
