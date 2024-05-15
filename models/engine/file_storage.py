@@ -8,7 +8,7 @@ from models.city import City
 from models.place import Place
 from models.amenity import Amenity
 from models.review import Review
-from models.place import Place
+
 
 class FileStorage:
     """Represent an abstracted storage engine.
@@ -21,33 +21,25 @@ class FileStorage:
     __objects = {}
 
     def all(self):
-        """Returns the dictionary __objects"""
-        return self._objects
+        return FileStorage.__objects
 
     def new(self, obj):
-        """sets obj in __objects with key <obj class name>.id"""
-        key = "{}.{}".format(obj.__class__.__name__, obj.id)
-        self.__objects[key] = obj
+        ocname = obj.__class__.__name__
+        FileStorage.__objects["{}.{}".format(ocname, obj.id)] = obj
 
     def save(self):
-        from models.base_model import BaseModel
-        """Serializes __objects to the JSON file"""
-        data = {}
-        for key, obj in self.__objects.items():
-            data[key] = obj.to_dict()
-        with open (self.__file_path, 'w') as file:
-            json.dump(data, file)
-        
+        odict = FileStorage.__objects
+        objdict = {obj: odict[obj].to_dict() for obj in odict.keys()}
+        with open(FileStorage.__file_path, "w") as f:
+            json.dump(objdict, f)
+
     def reload(self):
-        from models.base_model import BaseModel
         try:
-            with open(self.__file_path, 'r') as file:
-                data = json.load(file)
-                for key, obj_dict in data.items():
-                    class_name, obj_id = key.split('.')
-                    obj = eval(class_name)(**obj_dict)
-                    self.__objects[key] = obj
+            with open(FileStorage.__file_path) as f:
+                objdict = json.load(f)
+                for o in objdict.values():
+                    cls_name = o["__class__"]
+                    del o["__class__"]
+                    self.new(eval(cls_name)(**o))
         except FileNotFoundError:
-            pass
-storage = FileStorage()
-storage.reload()
+            return
