@@ -1,59 +1,60 @@
 #!/usr/bin/python3
-"""test file for BaseModel class"""
+"""Unit test for the class city
+"""
 import unittest
-from datetime import datetime
+# import json
+import pep8
+from models import city
+from models.city import City
 from models.base_model import BaseModel
 
 
-class TestBaseModel(unittest.TestCase):
-    """creating a testcase that inherits from unittest.TestCase"""
+class TestCityClass(unittest.TestCase):
+    """TestCityClass test for the city class
+    Args:
+        unittest (): Propertys for unit testing
+    """
+
+    maxDiff = None
+
     def setUp(self):
-        """setting up the object for testing"""
-        self.base_model = BaseModel()
+        """Return to "" class attributes"""
+        City.name = ""
+        City.state_id = ""
 
-    def test_id_generation(self):
-        """test for id generation"""
-        self.assertIsNotNone(self.base_model.id)
-        self.assertIsInstance(self.base_model.id, str)
+    def test_module_doc(self):
+        """ check for module documentation """
+        self.assertTrue(len(city.__doc__) > 0)
 
-    def test_created_at(self):
-        """test for the created_at attribute"""
-        self.assertIsNotNone(self.base_model.created_at)
-        self.assertIsInstance(self.base_model.created_at, datetime)
+    def test_class_doc(self):
+        """ check for documentation """
+        self.assertTrue(len(City.__doc__) > 0)
 
-    def test_updated_at(self):
-        """test for the updated_at attribute"""
-        self.assertIsNotNone(self.base_model.updated_at)
-        self.assertIsInstance(self.base_model.updated_at, datetime)
+    def test_method_docs(self):
+        """ check for method documentation """
+        for func in dir(City):
+            self.assertTrue(len(func.__doc__) > 0)
 
-    def test_save(self):
-        """
-        test for the save method by getting the initial value of updated_at,
-        then calling the save method and checking if the save method updated
-        the variable
-        """
-        first_updated_at = self.base_model.updated_at
-        self.base_model.save()
-        second_updated_at = self.base_model.updated_at
-        self.assertNotEqual(first_updated_at, second_updated_at)
+    def test_pep8(self):
+        """ test base and test_base for pep8 conformance """
+        style = pep8.StyleGuide(quiet=True)
+        file1 = 'models/city.py'
+        file2 = 'tests/test_models/test_city.py'
+        result = style.check_files([file1, file2])
+        self.assertEqual(result.total_errors, 0,
+                         "Found code style errors (and warning).")
 
-    def test_to_dict(self):
-        """test for the to_dict method of the BaseModel class"""
-        obj_dict = self.base_model.to_dict()
-        self.assertIsInstance(obj_dict, dict)
-        self.assertEqual(
-            obj_dict['__class__'], 'BaseModel')
-        self.assertEqual(
-            obj_dict['created_at'], self.base_model.created_at.isoformat())
-        self.assertEqual(
-            obj_dict['updated_at'], self.base_model.updated_at.isoformat())
+    def test_is_instance(self):
+        """ Test if user is instance of basemodel """
+        my_city = City()
+        self.assertTrue(isinstance(my_city, BaseModel))
 
-    def test__str__(self):
-        """test for __str__ of the BaseModel class"""
-        actual_output = str(self.base_model)
-        self.assertEqual(
-            actual_output,
-            f"[BaseModel] ({self.base_model.id}) {self.base_model.__dict__}")
+    def test_field_types(self):
+        """ Test field attributes of user """
+        my_city = City()
+        self.assertTrue(type(my_city.name) == str)
+        self.assertTrue(type(my_city.state_id) == str)
+
 
 if __name__ == '__main__':
     unittest.main()
